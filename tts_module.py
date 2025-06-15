@@ -24,10 +24,10 @@ class TTS:
     """
     def __init__(self):
         # TTS credentials
-        self.tts_api_key = 'I5QsxskTd3VsHqvzm09au8TdYwWYtOffdrUp-pq9dd3F'
+        self.tts_api_key = ''
         self.tts_url_service = 'https://api.us-east.text-to-speech.watson.cloud.ibm.com/instances/9a47d4f8-5d24-4297-b696-457e30474968'
         # Language Translator credentials
-        self.lt_api_key = 'I5QsxskTd3VsHqvzm09au8TdYwWYtOffdrUp-pq9dd3F'
+        self.lt_api_key = ''
         self.lt_url_service = 'https://api.us-south.language-translator.watson.cloud.ibm.com'
         self.lt_version = '2018-05-01'
 
