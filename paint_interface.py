@@ -118,6 +118,12 @@ current_mode = PaintMode.IDLE
 mode_selected = False
 mode_change_cooldown = 0  # Prevent rapid mode switching
 
+# Saving Video
+fps = cap.get(cv2.CAP_PROP_FPS)
+codec = cv2.VideoWriter_fourcc(*'mp4v')  # H.264 or H.265 codec for .MP4
+output1 = cv2.VideoWriter("canvas.mp4", codec, fps, (1280, 720))
+output2 = cv2.VideoWriter("inverse_canvas.mp4", codec, fps, (1280, 720))
+
 while True:
     # read frames
     success, img = cap.read()
@@ -208,11 +214,11 @@ while True:
                     imgCanvas = np.zeros((720, 1280, 3), np.uint8)
 
             elif current_mode == PaintMode.SAVE_CANVAS:
-                cv2.imwrite("canvas.jpg", imgInv)
+                cv2.imwrite("portfolio_canvas.jpg", imgInv)
                 current_mode = PaintMode.IDLE
             elif current_mode == PaintMode.TRANSLATE_EN:
                 language_translate = False
-                ocr_img = cv2.imread('canvas.jpg')
+                ocr_img = cv2.imread('portfolio_canvas.jpg')
                 prompt = ocr.extract_text(ocr_img)
                 print(prompt)
                 threading.Thread(target=tts.text_to_speech, args=(prompt,), kwargs={'translate': False},
@@ -221,7 +227,7 @@ while True:
                 current_mode = PaintMode.IDLE
             elif current_mode == PaintMode.TRANSLATE_FR:
                 language_translate = True
-                ocr_img = cv2.imread('canvas.jpg')
+                ocr_img = cv2.imread('portfolio_canvas.jpg')
                 prompt = ocr.extract_text(ocr_img)
                 print(prompt)
                 threading.Thread(target=tts.text_to_speech, args=(prompt,), kwargs={'translate': True},
@@ -277,8 +283,13 @@ while True:
 
     # ========== DISPLAY & EXIT ==========
     cv2.imshow("Air Drawing - Paint to Talk", img)
+
     # cv2.imshow("Canvas", imgCanvas)
     # cv2.imshow("Inv", imgInv)
+
+    # Saving: Write the frame to the output video
+    # output1.write(imgCanvas)
+    # output1.write(imgInv)
 
     # Check for exit key
     key = cv2.waitKey(1) & 0xFF
@@ -293,3 +304,9 @@ while True:
         filename = f"quicksave_{cv2.getTickCount()}.png"
         cv2.imwrite(filename, imgCanvas)
         print(f"Quick save: {filename}")
+
+# Clean up
+cap.release()
+# output1.release()
+# output2.release()
+cv2.destroyAllWindows()
